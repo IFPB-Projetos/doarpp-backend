@@ -17,6 +17,9 @@ export const User = database.define("user", {
     type: STRING,
     unique: true,
   },
+  password: {
+    type: STRING,
+  },
   description: {
     allowNull: true,
     type: STRING(200),

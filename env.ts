@@ -8,7 +8,8 @@ export const {
   CLOUDINARY_SECRET,
   CLOUDINARY_NAME = "dlwoimstk",
   CLOUDINARY_API_KEY = "378278351497316",
-} = process.env as { [key: string]: string };
+  ROUNDS = 12
+} = process.env as { [key: string]: string | number };
 
 const required = {
   PG_URI,
@@ -16,6 +17,7 @@ const required = {
   CLOUDINARY_NAME,
   CLOUDINARY_SECRET,
   CLOUDINARY_API_KEY,
+  ROUNDS
 };
 
 for (let key in required) {
