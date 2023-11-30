@@ -5,18 +5,12 @@ export const {
   PORT = "8080",
   PG_URI,
   JWT_SECRET,
-  CLOUDINARY_SECRET,
-  CLOUDINARY_NAME = "dlwoimstk",
-  CLOUDINARY_API_KEY = "378278351497316",
   ROUNDS = 12
 } = process.env as { [key: string]: string | number };
 
 const required = {
   PG_URI,
   JWT_SECRET,
-  CLOUDINARY_NAME,
-  CLOUDINARY_SECRET,
-  CLOUDINARY_API_KEY,
   ROUNDS
 };
 

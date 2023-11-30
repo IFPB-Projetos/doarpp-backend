@@ -8,22 +8,19 @@ const router = Router();
 export const authRouter = router;
 
 router.post("/login", async (req, res) => {
-  const { username, password, accessToken } = req.body;
+  const { email, password } = req.body;
 
-  if (!accessToken) {
-    return res.status(400).send("missing access token on request body");
-  }
-  if (!username) {
-    return res.status(400).send("missing username")
+  if (!email) {
+    return res.status(400).send("missing email")
   }
   if (!password) {
     return res.status(400).send("missing password")
   }
 
-  let user = await User.findOne({ where: { name: username } });
+  let user = await User.findOne({ where: { email: email } });
 
-  if (!user) {
-    res.status(400).send("user don't exists");
+  if(!user){
+    return res.status(400).send("User doesn't exists.");
   }
 
   // to-do fix this typing
@@ -32,7 +29,17 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
+
+  if(!username){
+    return res.status(400).send("missing username");
+  }
+  if (!email) {
+    return res.status(400).send("missing email")
+  }
+  if (!password) {
+    return res.status(400).send("missing password")
+  }
 
   let user = await User.findOne({ where: { name: username } });
 
@@ -41,6 +48,7 @@ router.post("/signin", async (req, res) => {
 
     user = await User.create({
       name: username,
+      email: email,
       password: encrypted
     });
     return res.status(201).json({ user });
