@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { Comment } from "../comment/comment";
-import { validateUpload } from "../upload/validateUpload";
 import { Post } from "./post";
 
 const router = Router();
@@ -27,13 +26,10 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { userId } = req;
+  const { userId } = req.body;
   const { title, content, imageUpload } = req.body;
 
-  validateUpload(imageUpload);
-  const image = imageUpload.publicId;
-
-  const post = await Post.create({ title, userId, content, image });
+  const post = await Post.create({ title, userId, content, imageUpload });
   res.status(201).json(post);
 });
 
@@ -56,13 +52,7 @@ router.patch("/:id", async (req, res) => {
 
   const { title, content, imageUpload } = req.body;
 
-  let image = undefined;
-  if (imageUpload) {
-    validateUpload(imageUpload);
-    image = imageUpload.publicId;
-  }
-
-  await post.update({ title, content, image });
+  await post.update({ title, content, imageUpload });
 
   res.json(post);
 });
