@@ -1,22 +1,25 @@
 import { Router } from "express";
 import { Comment } from "../comment/comment";
 import { validateUpload } from "../upload/validateUpload";
+import { uploadImage } from "./upload";
 import { Post } from "./post";
-import {randomBytes} from "node:crypto";
-import multer from "multer";
+import path from "path";
+import multer from "multer"
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, "public/imgs")
+  },
+  filename: (req, file, callback) => {
+    callback(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage
+})
 
 const router = Router();
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, callback) {
-      callback(null, "public/imgs");
-    },
-    filename: function (req, file, callback) {
-      const fileName = `${randomBytes(16).toString('hex')}-${file.originalname}`;
-      callback(null, fileName);
-    },
-  }),
-})
 
 router.get("/", async (req, res) => {
   const posts = await Post.findAll({
@@ -39,17 +42,9 @@ router.get("/:id", async (req, res) => {
   return res.json(post?.toJSON());
 });
 
-<<<<<<< HEAD
-router.post("/", upload.single('image'), async (req, res) => {
-  const { userId } = req.body;
-=======
-router.post("/", async (req, res) => {
-  const { userId } = req;
->>>>>>> parent of 1ff8f96 (Mudando post)
-  const { title, content, imageUpload } = req.body;
-
-  validateUpload(imageUpload);
-  const image = imageUpload.publicId;
+router.post("/", upload.single('imageUpload'), async (req, res) => {
+  const { userId, title, content } = req.body;
+  const image = req.file?.filename
 
   const post = await Post.create({ title, userId, content, image });
   res.status(201).json(post);
@@ -74,11 +69,7 @@ router.patch("/:id", async (req, res) => {
 
   const { title, content, imageUpload } = req.body;
 
-  let image = undefined;
-  if (imageUpload) {
-    validateUpload(imageUpload);
-    image = imageUpload.publicId;
-  }
+  let image = imageUpload;
 
   await post.update({ title, content, image });
 

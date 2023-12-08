@@ -6,7 +6,7 @@ export const {
   PG_URI,
   JWT_SECRET,
   ROUNDS = 12
-} = process.env as { [key: string]: string | number };
+} = process.env as { [key: string]: string };
 
 const required = {
   PG_URI,
