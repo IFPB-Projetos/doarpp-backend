@@ -1,8 +1,21 @@
 import { Router } from "express";
 import { Comment } from "../comment/comment";
 import { Post } from "./post";
+import {randomBytes} from "node:crypto";
+import multer from "multer";
 
 const router = Router();
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, "public/imgs");
+    },
+    filename: function (req, file, callback) {
+      const fileName = `${randomBytes(16).toString('hex')}-${file.originalname}`;
+      callback(null, fileName);
+    },
+  }),
+})
 
 router.get("/", async (req, res) => {
   const posts = await Post.findAll({
@@ -25,7 +38,7 @@ router.get("/:id", async (req, res) => {
   return res.json(post?.toJSON());
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single('image'), async (req, res) => {
   const { userId } = req.body;
   const { title, content, imageUpload } = req.body;
 
