@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Comment } from "../comment/comment";
+import { validateUpload } from "../upload/validateUpload";
 import { Post } from "./post";
 import {randomBytes} from "node:crypto";
 import multer from "multer";
@@ -38,11 +39,19 @@ router.get("/:id", async (req, res) => {
   return res.json(post?.toJSON());
 });
 
+<<<<<<< HEAD
 router.post("/", upload.single('image'), async (req, res) => {
   const { userId } = req.body;
+=======
+router.post("/", async (req, res) => {
+  const { userId } = req;
+>>>>>>> parent of 1ff8f96 (Mudando post)
   const { title, content, imageUpload } = req.body;
 
-  const post = await Post.create({ title, userId, content, imageUpload });
+  validateUpload(imageUpload);
+  const image = imageUpload.publicId;
+
+  const post = await Post.create({ title, userId, content, image });
   res.status(201).json(post);
 });
 
@@ -65,7 +74,13 @@ router.patch("/:id", async (req, res) => {
 
   const { title, content, imageUpload } = req.body;
 
-  await post.update({ title, content, imageUpload });
+  let image = undefined;
+  if (imageUpload) {
+    validateUpload(imageUpload);
+    image = imageUpload.publicId;
+  }
+
+  await post.update({ title, content, image });
 
   res.json(post);
 });

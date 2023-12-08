@@ -18,7 +18,7 @@ export const Post = database.define("post", {
   },
   image: {
     type: STRING,
-    allowNull: true,
+    allowNull: false,
   },
 });
 
