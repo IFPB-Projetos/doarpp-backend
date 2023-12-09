@@ -1,23 +1,7 @@
 import { Router } from "express";
 import { Comment } from "../comment/comment";
-import { validateUpload } from "../upload/validateUpload";
-import { uploadImage } from "./upload";
 import { Post } from "./post";
-import path from "path";
-import multer from "multer"
-
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, "public/imgs")
-  },
-  filename: (req, file, callback) => {
-    callback(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
-  }
-})
-
-const upload = multer({
-  storage: storage
-})
+import { upload } from "../config/multer";
 
 const router = Router();
 

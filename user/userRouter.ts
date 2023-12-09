@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { phone as validatePhone } from "phone";
-import { validateUpload } from "../upload/validateUpload";
 import { User } from "./user";
+import { upload } from "../config/multer";
 
 const router = Router();
 
@@ -54,7 +54,7 @@ router.patch("/me/location", async (req, res) => {
   return res.json(user);
 });
 
-router.patch("/me", async (req, res) => {
+router.patch("/me", upload.single("imageUpload"), async (req, res) => {
   const { userId } = req;
 
   let user = await User.findByPk(userId);
@@ -63,13 +63,9 @@ router.patch("/me", async (req, res) => {
     return res.status(404).send("user not found");
   }
 
-  const { name, description, imageUpload, phone } = req.body;
+  const { name, description, phone } = req.body;
 
-  let image = undefined;
-  if (imageUpload) {
-    validateUpload(imageUpload);
-    image = imageUpload.publicId;
-  }
+  let image = req.file?.filename;
 
   if (phone) {
     const { isValid } = validatePhone(phone);
