@@ -55,7 +55,7 @@ router.patch("/me/location", async (req, res) => {
 });
 
 router.patch("/me", upload.single("imageUpload"), async (req, res) => {
-  const { userId } = req;
+  const { userId } = req.body;
 
   let user = await User.findByPk(userId);
 
