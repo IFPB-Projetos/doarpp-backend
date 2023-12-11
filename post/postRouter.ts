@@ -28,15 +28,18 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", upload.single('imageUpload'), async (req, res) => {
   const { userId, title, content } = req.body;
-  const image = req.file?.filename
+  const image = req.file?.filename;
+
+  console.log(image);
 
   const post = await Post.create({ title, userId, content, image });
   res.status(201).json(post);
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", upload.single('imageUpload'), async (req, res) => {
   const { userId } = req;
   const { id } = req.params;
+  const image = req.file?.filename;
 
   let post = await Post.findByPk(id);
 
@@ -46,14 +49,13 @@ router.patch("/:id", async (req, res) => {
     throw new Error("Post not found");
   }
 
-  if (post.dataValues.userId !== userId) {
-    res.status(403);
-    throw new Error("unauthorized post patch");
-  }
+  // if (post.dataValues.userId !== userId) {
+  //   res.status(403);
+  //   throw new Error("unauthorized post patch");
+  // }
 
-  const { title, content, imageUpload } = req.body;
+  const { title, content} = req.body;
 
-  let image = imageUpload;
 
   await post.update({ title, content, image });
 
