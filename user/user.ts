@@ -10,6 +10,11 @@ export const User = database.define("user", {
   name: {
     type: STRING(35),
   },
+  username: {
+    type: STRING(35),
+    unique: true,
+    allowNull: false
+  },
   image: {
     type: STRING,
   },

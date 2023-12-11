@@ -12,9 +12,9 @@ router.get("/me", async (req, res) => {
   return res.json(user);
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findByPk(id, { include: "posts" });
+router.get("/:userName", async (req, res) => {
+  const { userName } = req.params;
+  const user = await User.findOne({where: {username: userName}, include: "posts" });
 
   if (!user) {
     res.status(404);

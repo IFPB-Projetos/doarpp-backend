@@ -41,13 +41,13 @@ router.post("/signin", async (req, res) => {
     return res.status(400).send("missing password")
   }
 
-  let user = await User.findOne({ where: { name: username } });
+  let user = await User.findOne({ where: { username: username } });
 
   if (!user) {
     const encrypted = await bcrypt.hash(password, Number(ROUNDS));
 
     user = await User.create({
-      name: username,
+      username: username,
       email: email,
       password: encrypted
     });
