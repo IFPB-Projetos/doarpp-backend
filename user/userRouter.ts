@@ -12,6 +12,18 @@ router.get("/me", async (req, res) => {
   return res.json(user);
 });
 
+router.get("/idsearch/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findByPk(userId);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  return res.json(user.toJSON());
+});
+
 router.get("/:userName", async (req, res) => {
   const { userName } = req.params;
   const user = await User.findOne({where: {username: userName}, include: "posts" });
