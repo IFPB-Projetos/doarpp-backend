@@ -36,6 +36,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/user/:userId", async (req, res) => {
+  
   try {
     const { userId } = req.params;
 
@@ -57,9 +58,14 @@ router.get("/user/:userId", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  
   try {
     const { id } = req.params;
-    const favorite = await Favorite.findByPk(id);
+    const favorite = await Favorite.findOne({
+      where: {
+        postId: id,
+      },
+    });
 
     if (!favorite) {
       return res.status(404).send("Post favoritado não encontrado");
