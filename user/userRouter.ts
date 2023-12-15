@@ -75,9 +75,19 @@ router.patch("/me", upload.single("imageUpload"), async (req, res) => {
     return res.status(404).send("user not found");
   }
 
-  const { name, description, phone } = req.body;
+  const { name, description, phone, lat, lng } = req.body;
 
   let image = req.file?.filename;
+
+  const position = {
+    lat: Number(lat),
+    lng: Number(lng)
+  }
+
+  const location = {
+    type: "Point",
+    coordinates: [position.lat, position.lng],
+  };
 
   if (phone) {
     const { isValid } = validatePhone(phone);
@@ -87,7 +97,7 @@ router.patch("/me", upload.single("imageUpload"), async (req, res) => {
     }
   }
 
-  await user.update({ name, description, image, phone });
+  await user.update({ name, description, image, phone, location });
 
   res.json(user);
 });
