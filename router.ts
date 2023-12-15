@@ -11,4 +11,4 @@ router.use("/auth", authRouter);
 router.use("/posts", postRouter);
 router.use("/users", userRouter);
 router.use("/comments", commentRouter);
-router.use("favorite",favoriteRouter);
+router.use("/favorite",favoriteRouter);
