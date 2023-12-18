@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { phone as validatePhone } from "phone";
 import { User } from "./user";
 import { upload } from "../config/multer";
 
 const router = Router();
 
-// the order matters
 router.get("/me", async (req, res) => {
   const { userId } = req;
   const user = await User.findByPk(userId);
@@ -89,14 +87,7 @@ router.patch("/me", upload.single("imageUpload"), async (req, res) => {
     coordinates: [position.lat, position.lng],
   };
 
-  if (phone) {
-    const { isValid } = validatePhone(phone);
-
-    if (!isValid) {
-      return res.status(400).send("Invalid phone number");
-    }
-  }
-
+  
   await user.update({ name, description, image, phone, location });
 
   res.json(user);
