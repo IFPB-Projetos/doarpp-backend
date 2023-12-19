@@ -10,8 +10,8 @@ export function authMiddleware(
   if (!token) {
     return next();
   }
-
-  const userId = getTokenUserId(token);
+  const [, bareToken] = token.split(" ");
+  const userId = getTokenUserId(bareToken);
   req.userId = userId;
   return next();
 }
